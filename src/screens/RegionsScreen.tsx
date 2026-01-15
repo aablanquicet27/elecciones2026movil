@@ -1,7 +1,6 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, ActivityIndicator, Dimensions, StyleSheet, RefreshControl, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { VictoryChart, VictoryBar, VictoryTheme, VictoryAxis, VictoryGroup, VictoryLegend, VictoryLabel } from 'victory-native';
 import { fetchRegionalData, fetchAgeData, fetchCandidates } from '../utils/api';
 import { RegionalData, AgeData, Candidate } from '../types/election';
 
@@ -18,39 +17,29 @@ const RegionsScreen: React.FC = () => {
   useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
-    const [reg, age, cand] = await Promise.all([
-      fetchRegionalData(),
-      fetchAgeData(),
-      fetchCandidates()
-    ]);
+    const [reg, age, cand] = await Promise.all([fetchRegionalData(), fetchAgeData(), fetchCandidates()]);
     setRegionalData(reg);
     setAgeData(age);
     setCandidates(cand);
     setLoading(false);
   };
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await loadData();
-    setRefreshing(false);
-  };
+  const onRefresh = async () => { setRefreshing(true); await loadData(); setRefreshing(false); };
 
-  if (loading) {
-    return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#7c3aed" />
-        <Text style={styles.loadingText}>Cargando datos demográficos...</Text>
-      </View>
-    );
-  }
+  if (loading) return (
+    <View style={styles.centerContainer}>
+      <ActivityIndicator size="large" color="#7c3aed" />
+      <Text style={styles.loadingText}>Cargando datos demograficos...</Text>
+    </View>
+  );
 
   const regionColors: { [key: string]: string } = {
     'Costa Caribe': '#ef4444',
     'Andina': '#22c55e',
-    'Pacífica': '#3b82f6',
-    'Orinoquía': '#f59e0b',
-    'Amazonía': '#8b5cf6',
-    'Bogotá': '#ec4899'
+    'Pacifica': '#3b82f6',
+    'Orinoquia': '#f59e0b',
+    'Amazonia': '#8b5cf6',
+    'Bogota': '#ec4899'
   };
 
   const ageColors: { [key: string]: string } = {
@@ -63,25 +52,17 @@ const RegionsScreen: React.FC = () => {
 
   return (
     <ScrollView style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#7c3aed']} />}>
-      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Demografía Electoral</Text>
-        <Text style={styles.headerSubtitle}>Análisis por regiones y grupos de edad</Text>
+        <Text style={styles.headerTitle}>Demografia Electoral</Text>
+        <Text style={styles.headerSubtitle}>Analisis por regiones y grupos de edad</Text>
       </View>
 
-      {/* Tabs */}
       <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'regions' && styles.tabActive]}
-          onPress={() => setActiveTab('regions')}
-        >
+        <TouchableOpacity style={[styles.tab, activeTab === 'regions' && styles.tabActive]} onPress={() => setActiveTab('regions')}>
           <Ionicons name="map" size={18} color={activeTab === 'regions' ? '#7c3aed' : '#6b7280'} />
           <Text style={[styles.tabText, activeTab === 'regions' && styles.tabTextActive]}>Regiones</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'ages' && styles.tabActive]}
-          onPress={() => setActiveTab('ages')}
-        >
+        <TouchableOpacity style={[styles.tab, activeTab === 'ages' && styles.tabActive]} onPress={() => setActiveTab('ages')}>
           <Ionicons name="people" size={18} color={activeTab === 'ages' ? '#7c3aed' : '#6b7280'} />
           <Text style={[styles.tabText, activeTab === 'ages' && styles.tabTextActive]}>Edades</Text>
         </TouchableOpacity>
@@ -89,19 +70,17 @@ const RegionsScreen: React.FC = () => {
 
       {activeTab === 'regions' && (
         <>
-          {/* Regional Summary Cards */}
           <View style={styles.summaryContainer}>
-            <Text style={styles.sectionTitle}>Intención de Voto por Región</Text>
-            <Text style={styles.sectionSubtitle}>Cómo varía el apoyo a cada candidato según la región</Text>
+            <Text style={styles.sectionTitle}>Intencion de Voto por Region</Text>
+            <Text style={styles.sectionSubtitle}>Como varia el apoyo a cada candidato segun la region</Text>
           </View>
 
-          {/* Regional Cards */}
           {regionalData.length > 0 ? (
             regionalData.map((region, idx) => (
               <View key={idx} style={styles.regionCard}>
                 <View style={styles.regionHeader}>
-                  <View style={[styles.regionDot, { backgroundColor: regionColors[region.Región] || '#6b7280' }]} />
-                  <Text style={styles.regionName}>{region.Región}</Text>
+                  <View style={[styles.regionDot, { backgroundColor: regionColors[region.Region] || '#6b7280' }]} />
+                  <Text style={styles.regionName}>{region.Region}</Text>
                 </View>
                 
                 {candidates.slice(0, 5).map((candidate, i) => {
@@ -112,7 +91,7 @@ const RegionsScreen: React.FC = () => {
                     <View key={i} style={styles.candidateRow}>
                       <Text style={styles.candidateNameSmall} numberOfLines={1}>{candidate.Candidato}</Text>
                       <View style={styles.barContainer}>
-                        <View style={[styles.bar, { width: Math.min(percentage * 4, 100) + '%', backgroundColor: regionColors[region.Región] || '#6b7280' }]} />
+                        <View style={[styles.bar, { width: Math.min(percentage * 4, 100) + '%', backgroundColor: regionColors[region.Region] || '#6b7280' }]} />
                       </View>
                       <Text style={styles.percentText}>{percentage}%</Text>
                     </View>
@@ -131,13 +110,11 @@ const RegionsScreen: React.FC = () => {
 
       {activeTab === 'ages' && (
         <>
-          {/* Age Summary */}
           <View style={styles.summaryContainer}>
-            <Text style={styles.sectionTitle}>Intención de Voto por Edad</Text>
+            <Text style={styles.sectionTitle}>Intencion de Voto por Edad</Text>
             <Text style={styles.sectionSubtitle}>Preferencias electorales por grupo etario</Text>
           </View>
 
-          {/* Age Groups Legend */}
           <View style={styles.ageLegend}>
             {Object.entries(ageColors).map(([age, color]) => (
               <View key={age} style={styles.ageItem}>
@@ -147,7 +124,6 @@ const RegionsScreen: React.FC = () => {
             ))}
           </View>
 
-          {/* Age Cards */}
           {ageData.length > 0 ? (
             ageData.map((age, idx) => (
               <View key={idx} style={styles.ageCard}>
@@ -155,7 +131,7 @@ const RegionsScreen: React.FC = () => {
                   <View style={[styles.ageBadge, { backgroundColor: ageColors[age.Grupo_Edad] || '#6b7280' }]}>
                     <Text style={styles.ageBadgeText}>{age.Grupo_Edad}</Text>
                   </View>
-                  <Text style={styles.ageTitle}>años</Text>
+                  <Text style={styles.ageTitle}>anios</Text>
                 </View>
                 
                 {candidates.slice(0, 5).map((candidate, i) => {
@@ -183,21 +159,20 @@ const RegionsScreen: React.FC = () => {
         </>
       )}
 
-      {/* Insights Section */}
       <View style={styles.insightsSection}>
         <Text style={styles.sectionTitle}>Hallazgos Clave</Text>
         <View style={styles.insightCard}>
           <Ionicons name="bulb" size={24} color="#f59e0b" />
           <View style={styles.insightContent}>
-            <Text style={styles.insightTitle}>Variación Regional</Text>
-            <Text style={styles.insightText}>Los candidatos muestran diferencias significativas en apoyo según la región geográfica</Text>
+            <Text style={styles.insightTitle}>Variacion Regional</Text>
+            <Text style={styles.insightText}>Los candidatos muestran diferencias significativas en apoyo segun la region geografica</Text>
           </View>
         </View>
         <View style={styles.insightCard}>
           <Ionicons name="trending-up" size={24} color="#22c55e" />
           <View style={styles.insightContent}>
             <Text style={styles.insightTitle}>Factor Generacional</Text>
-            <Text style={styles.insightText}>Los votantes jóvenes (18-35) muestran preferencias distintas a los mayores de 55</Text>
+            <Text style={styles.insightText}>Los votantes jovenes (18-35) muestran preferencias distintas a los mayores de 55</Text>
           </View>
         </View>
       </View>

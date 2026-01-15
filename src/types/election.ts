@@ -1,48 +1,59 @@
-﻿// Tipos clonados del proyecto web
 export interface Candidate {
   Candidato: string;
   Partido_Movimiento: string;
-  Intención_Voto_Porcentaje: number;
+  Tendencia_Politica: string;
+  Cargo_Actual: string;
+  Edad: number;
+  Intencion_Voto_Porcentaje: number;
   Favorabilidad: number;
   Desfavorabilidad: number;
-  Edad: number;
-  Tendencia_Política: string;
-  Cargo_Actual: string;
-  Descripción?: string;
+  Descripcion?: string;
+  [key: string]: string | number | undefined;
 }
 
 export interface RegionalData {
-  Región: string;
-  percentage: number;
-  candidatoLider?: string;
+  Region: string;
+  [key: string]: string | number;
 }
 
 export interface AgeData {
-  Rango_Edad: string;
-  percentage: number;
+  Grupo_Edad: string;
+  [key: string]: string | number;
 }
 
 export interface ComparisonData {
-  tendencia: string;
-  porcentaje2022: number;
-  porcentaje2026: number;
+  Candidato: string;
+  Porcentaje_2022: number;
+  Porcentaje_2026: number;
+  Cambio: number;
+}
+
+export interface SecondRoundScenario {
+  Candidato_1: string;
+  Candidato_2: string;
+  Porcentaje_1: number;
+  Porcentaje_2: number;
+}
+
+export interface FavorabilityData {
+  Candidato: string;
+  Favorabilidad: number;
+  Desfavorabilidad: number;
+  No_Conoce: number;
 }
 
 export interface Noticia {
   id: number;
-  title: string;
-  content: string;
-  date: string;
-  source: string;
-  candidates: string[];
-  political_parties: string[];
+  titulo: string;
+  contenido: string;
+  fecha: string;
+  fuente?: string;
 }
 
 export interface InsightData {
-  title: string;
-  description: string;
-  impact: string;
-  percentage?: string;
-  change?: string;
-  uncertainty?: string;
+  titulo: string;
+  descripcion: string;
+  valor: string | number;
+  icono: string;
+  color: string;
 }
